@@ -11,6 +11,12 @@ namespace AngularJSAuthentication.API.Controllers
     [RoutePrefix("api/Orders")]
     public class OrdersController : ApiController
     {
+        [Route("api/Hash")]
+        public string GetHash()
+        {
+            return Helper.GetHash("abc@123");
+        }
+
         [Authorize]
         [Route("")]
         public IHttpActionResult Get()

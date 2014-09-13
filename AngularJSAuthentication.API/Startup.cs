@@ -65,11 +65,13 @@ namespace AngularJSAuthentication.API
             //Configure Facebook External Login
             facebookAuthOptions = new FacebookAuthenticationOptions()
             {
-                AppId = "xxxxxx",
-                AppSecret = "xxxxxx",
+                AppId = "696434357104240",
+                AppSecret = "4f01e552dbbec0d79a5fb7419c8c8026",
                 Provider = new FacebookAuthProvider()
             };
             app.UseFacebookAuthentication(facebookAuthOptions);
+
+           
 
         }
     }
