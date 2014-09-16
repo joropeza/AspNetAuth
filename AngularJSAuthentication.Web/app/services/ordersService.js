@@ -12,6 +12,13 @@ app.factory('ordersService', ['$http', 'ngAuthSettings', function ($http, ngAuth
         });
     };
 
+    var _doTest = function () {
+
+        return $http.get('appApi/api/values').then(function (results) {
+            return results;
+        });
+    };
+
     ordersServiceFactory.getOrders = _getOrders;
 
     return ordersServiceFactory;

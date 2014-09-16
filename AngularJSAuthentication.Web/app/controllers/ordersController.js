@@ -5,10 +5,14 @@ app.controller('ordersController', ['$scope', 'ordersService', function ($scope,
 
     ordersService.getOrders().then(function (results) {
 
-        $scope.orders = results.data;
+    });
+
+    ordersService.doTest().then(function (results) {
+
+        alert("tested");
 
     }, function (error) {
-        //alert(error.data.message);
+        alert(error.data.message);
     });
 
 }]);
