@@ -43,7 +43,7 @@ app.config(function ($routeProvider) {
 });
 
 //var serviceBase = 'http://localhost:26264/';
-var serviceBase = 'http://auth.jonny.dance/';
+var serviceBase = 'api/';
 app.constant('ngAuthSettings', {
     apiServiceBaseUri: serviceBase,
     clientId: 'ngAuthApp'
