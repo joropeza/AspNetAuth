@@ -20,6 +20,7 @@ app.factory('ordersService', ['$http', 'ngAuthSettings', function ($http, ngAuth
     };
 
     ordersServiceFactory.getOrders = _getOrders;
+    ordersServiceFactory.doTest = _doTest;
 
     return ordersServiceFactory;
 
