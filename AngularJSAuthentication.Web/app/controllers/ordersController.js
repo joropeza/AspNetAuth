@@ -7,12 +7,5 @@ app.controller('ordersController', ['$scope', 'ordersService', function ($scope,
 
     });
 
-    ordersService.doTest().then(function (results) {
-
-        alert("tested");
-
-    }, function (error) {
-        alert(error.data.message);
-    });
 
 }]);
