@@ -70,8 +70,8 @@ namespace AngularJSAuthentication.API
             //Configure Facebook External Login
             facebookAuthOptions = new FacebookAuthenticationOptions()
             {
-                AppId = "696434357104240",
-                AppSecret = "4f01e552dbbec0d79a5fb7419c8c8026",
+                AppId = System.Configuration.ConfigurationManager.AppSettings["FacebookAppId"],
+                AppSecret = System.Configuration.ConfigurationManager.AppSettings["FacebookAppSecret"],
                 Provider = new FacebookAuthProvider()
             };
             app.UseFacebookAuthentication(facebookAuthOptions);
@@ -79,8 +79,8 @@ namespace AngularJSAuthentication.API
             //Configure Twitter External Login
            twitterAuthOptions = new TwitterAuthenticationOptions()
             {
-                ConsumerKey = "J22ZkRF4BkRQ6P1mSPDFAp7D9",
-                ConsumerSecret = "ofgFfLvhfSpDu9IjFToURHN2jVAhshF8I2Wy5WKhZtcH3gc692",
+                ConsumerKey = System.Configuration.ConfigurationManager.AppSettings["TwitterConsumerKey"],
+                ConsumerSecret = System.Configuration.ConfigurationManager.AppSettings["TwitterConsumerSecret"],
                 Provider = new TwitterAuthProvider()
             };
            app.UseTwitterAuthentication(twitterAuthOptions);
@@ -89,8 +89,8 @@ namespace AngularJSAuthentication.API
            linkedinAuthOptions = new LinkedInAuthenticationOptions()
            {
 
-               ClientId = "753c7mtahb7ujg",
-               ClientSecret = "jSbX6K8lAUowRU3H",
+               ClientId = System.Configuration.ConfigurationManager.AppSettings["LinkedInClientId"],
+               ClientSecret = System.Configuration.ConfigurationManager.AppSettings["LinkedInSecret"],
                Provider = new LinkedInAuthProvider()
            };
            app.UseLinkedInAuthentication(linkedinAuthOptions);

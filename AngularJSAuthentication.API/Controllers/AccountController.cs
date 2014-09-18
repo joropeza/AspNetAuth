@@ -391,7 +391,7 @@ namespace AngularJSAuthentication.API.Controllers
                     parsedToken = new ParsedExternalAccessToken();
 
                     parsedToken.user_id = jObj["id"];
-                    parsedToken.app_id = "4038401";
+                    parsedToken.app_id = System.Configuration.ConfigurationManager.AppSettings["LinkedInAppId"];
 
                      
                      
