@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
+
 namespace AngularJSAuthentication.API.Controllers
 {
     [RoutePrefix("api/Account")]
@@ -35,6 +36,7 @@ namespace AngularJSAuthentication.API.Controllers
 
         // POST api/Account/Register
         [AllowAnonymous]
+        //[EnableCors("*", "*", "*")] 
         [Route("Register")]
         public async Task<IHttpActionResult> Register(UserModel userModel)
         {
@@ -105,6 +107,10 @@ namespace AngularJSAuthentication.API.Controllers
                                             hasRegistered.ToString(),
                                             externalLogin.UserName);
 
+            //Claim accessTokenClaim = new Claim("urn:linkedin:accesstoken", externalLogin.ExternalAccessToken);
+
+            //await _repo.AddClaim(user, accessTokenClaim);
+
             return Redirect(redirectUri);
 
         }
@@ -119,6 +125,8 @@ namespace AngularJSAuthentication.API.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+           
 
             var verifiedAccessToken = await VerifyExternalAccessToken(model.Provider, model.ExternalAccessToken);
             if (verifiedAccessToken == null)
@@ -304,10 +312,34 @@ namespace AngularJSAuthentication.API.Controllers
                 //More about debug_tokn here: http://stackoverflow.com/questions/16641083/how-does-one-get-the-app-access-token-for-debug-token-inspection-on-facebook
                 var appToken = "696434357104240|OqEtWn6WQc6ErY-ntifRQQVmAUI";
                 verifyTokenEndPoint = string.Format("https://graph.facebook.com/debug_token?input_token={0}&access_token={1}", accessToken, appToken);
+                //https://graph.facebook.com/debug_token?input_token=CAAJ5ZA0J27nABANlCYbV8WUUjI9ZCHt1mybZBrqggy2xBBLVH3kbtAMZCbM38Ylq63Tfvriuwtsn8WTaJ3LNwZC652ieaA54YZAAF80IsZCd57qID2NqXw8XA4huyHn9CnEIdZBAdv9JE2IyGmZBtt0ZCeLIns0fSvnTZBr8DvOZCZCIWdBebCTKpc3L6&access_token=696434357104240|OqEtWn6WQc6ErY-ntifRQQVmAUI
             }
             else if (provider == "Google")
             {
                 verifyTokenEndPoint = string.Format("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={0}", accessToken);
+            }
+            else if (provider == "Twitter")
+            {
+                //athis is the right endpoint but WTF now?
+                verifyTokenEndPoint = string.Format("https://api.twitter.com/1.1/account/verify_credentials.json", accessToken);
+                //https://api.twitter.com/oauth/access_token?access_token=6643652-Vk4Nigl0sBRG775di4B7usvE4rxwBSbgKsTylxpYaL
+
+               
+
+            }
+            else if (provider == "LinkedIn")
+            {
+
+                verifyTokenEndPoint = string.Format("https://api.linkedin.com/v1/people/~:(id)?format=json&oauth2_access_token={0}", accessToken);
+
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\temp\kndk.txt"))
+                {
+
+                    file.WriteLine(accessToken);
+                       
+                }
+
+                //https://api.linkedin.com/v1/people/~:(id)?format=json&oauth2_access_token=CAAJ5ZA0J27nABANlCYbV8WUUjI9ZCHt1mybZBrqggy2xBBLVH3kbtAMZCbM38Ylq63Tfvriuwtsn8WTaJ3LNwZC652ieaA54YZAAF80IsZCd57qID2NqXw8XA4huyHn9CnEIdZBAdv9JE2IyGmZBtt0ZCeLIns0fSvnTZBr8DvOZCZCIWdBebCTKpc3L6
             }
             else
             {
@@ -318,14 +350,17 @@ namespace AngularJSAuthentication.API.Controllers
             var uri = new Uri(verifyTokenEndPoint);
             var response = await client.GetAsync(uri);
 
+            parsedToken = new ParsedExternalAccessToken();
+
+            try { 
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
 
                 dynamic jObj = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(content);
 
-                parsedToken = new ParsedExternalAccessToken();
-
+               
                 if (provider == "Facebook")
                 {
                     parsedToken.user_id = jObj["data"]["user_id"];
@@ -348,7 +383,40 @@ namespace AngularJSAuthentication.API.Controllers
 
                 }
 
+                   
+
+                else if (provider == "LinkedIn")
+                {
+                    
+                    parsedToken = new ParsedExternalAccessToken();
+
+                    parsedToken.user_id = jObj["id"];
+                    parsedToken.app_id = "4038401";
+
+                     
+                     
+                }
+                
+
+                  
+               
+
             }
+
+                
+
+            else if (provider == "Twitter")
+            {
+                parsedToken = new ParsedExternalAccessToken();
+
+                parsedToken.user_id = accessToken;
+                parsedToken.app_id = "ngAuthApp";
+            }
+
+
+            }
+            catch { } 
+            
 
             return parsedToken;
         }

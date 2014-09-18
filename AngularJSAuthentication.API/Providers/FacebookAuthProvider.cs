@@ -13,6 +13,7 @@ namespace AngularJSAuthentication.API.Providers
         public override Task Authenticated(FacebookAuthenticatedContext context)
         {
             context.Identity.AddClaim(new Claim("ExternalAccessToken", context.AccessToken));
+            //context.Identity.AddClaim(new Claim("EmailAddress", context.Email));
             return Task.FromResult<object>(null);
         }
     }

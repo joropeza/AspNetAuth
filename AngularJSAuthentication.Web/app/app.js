@@ -42,8 +42,9 @@ app.config(function ($routeProvider) {
 
 });
 
+var serviceBase = 'http://auth.jonny.dance/api/';
 //var serviceBase = 'http://localhost:26264/';
-var serviceBase = 'api/';
+//var serviceBase = 'api/';
 app.constant('ngAuthSettings', {
     apiServiceBaseUri: serviceBase,
     clientId: 'ngAuthApp'
@@ -51,6 +52,9 @@ app.constant('ngAuthSettings', {
 
 app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptorService');
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
 });
 
 app.run(['authService', function (authService) {
